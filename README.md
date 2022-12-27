@@ -20,3 +20,6 @@ In the "Program/script" field, enter the path to the PowerShell executable (e.g.
 In the "Add arguments (optional)" field, enter the path to your PowerShell script (e.g., "C:\Scripts\MyScript.ps1").<br><br>
 Click "Finish" to create the task.<br><br>
 This will create a task that runs the specified PowerShell script when the local user logs in to Windows. Note that the script will only run for the user who creates the task, and not for other users on the system.
+
+# Tweaking
+The most important value to customize is the $threshold variable, which is currently set to -50. You may need to adjust this value based on your specific requirements."

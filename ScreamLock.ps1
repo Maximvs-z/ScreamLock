@@ -1,7 +1,7 @@
 # Import the System.Windows.Forms namespace
 Add-Type -AssemblyName System.Windows.Forms
 
-# Set the threshold level (in dB)
+# Sets the threshold level (in dB). Adjust it to your specific needs.
 $threshold = -50
 
 # Continuously check the audio level
