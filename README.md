@@ -11,6 +11,7 @@ This is a PowerShell script designed to monitor the microphone input level and l
 
 
 
+## Running the PowerShell Script at Startup Using the Task Scheduler
 
 To run this PowerShell script when a local user logs in to Windows, you can use the Task Scheduler to create a task that runs at startup. Here is how you can do this:
 
