@@ -4,12 +4,10 @@ This is a PowerShell script designed to monitor the microphone input level and l
 
 *While it may potentially be used to address certain behavioral issues related to loud noises while playing games, ie. screaming, it is important to note that I am not a psychologist and cannot guarantee the effectiveness or lack of harm of this script. I cannot be held responsible for any consequences resulting from the use of this script. Use at your own risk.*
 
-
-
-
-
-
-
+<br>
+<br>
+<br>
+<br>
 
 ## Running the PowerShell Script at Startup Using the Task Scheduler
 
