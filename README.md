@@ -2,11 +2,11 @@
 
 This is a PowerShell script designed to monitor the microphone input level and lock the Windows session if the level exceeds a specified threshold. It is intended to be run continuously in the background. 
 
-While it may potentially be used to address certain behavioral issues related to loud noises while playing games, ie. screaming, it is important to note that I am not a psychologist and cannot guarantee the effectiveness or lack of harm of this script. I cannot be held responsible for any consequences resulting from the use of this script. Use at your own risk.
+**While it may potentially be used to address certain behavioral issues related to loud noises while playing games, ie. screaming, it is important to note that I am not a psychologist and cannot guarantee the effectiveness or lack of harm of this script. I cannot be held responsible for any consequences resulting from the use of this script. Use at your own risk.**
 
 
 
-To run this PowerShell script when a local user logs in to Windows, you can use the Task Scheduler to create a task that runs at startup. Here is how you can do this:
+**To run this PowerShell script when a local user logs in to Windows, you can use the Task Scheduler to create a task that runs at startup. Here is how you can do this:**
 
 Open the Task Scheduler.
 In the Actions pane, click "Create Basic Task".
