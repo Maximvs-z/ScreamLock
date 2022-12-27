@@ -6,7 +6,6 @@ This is a PowerShell script designed to monitor the microphone input level and l
 
 <br>
 <br>
-<br>
 
 ## Running the PowerShell Script at Startup Using the Task Scheduler
 
