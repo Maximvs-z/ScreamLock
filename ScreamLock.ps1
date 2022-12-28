@@ -1,18 +1,21 @@
-# Import the System.Windows.Forms namespace
-Add-Type -AssemblyName System.Windows.Forms
-
-# Sets the threshold level (in dB). Adjust it to your specific requirements.
+# Sets the threshold for the microphone input level (in dB). Adjust it to your specific requirements.
 $threshold = -50
 
-# Continuously check the audio level
-while (1 -eq 1) {
-  # Get the current audio level
-  $audio_level = Get-WmiObject -Class Win32_SoundDevice | Select-Object -ExpandProperty CurrentSamplePeak
+# Get the default audio input device
+$inputDevice = Get-WmiObject -Class Win32_SoundDevice | Where-Object {$_.ProductName -match "microphone"}
 
-  # Check if the audio level is above the threshold
-  if ($audio_level -gt $threshold) {
+# Continuously check the input level
+while ($true) {
+
+  # Get the current input level
+  $inputLevel = $inputDevice.AudioInputMixer.InputGain
+
+  # Check if the input level is above the threshold
+  if ($inputLevel -gt $threshold) {
     # Lock the Windows session
-    [System.Windows.Forms.SendKeys]::SendWait("{LWIN}+{L}")
+    rundll32.exe user32.dll,LockWorkStation
+  }
+
   }
 
   # Wait for 1 second before checking again
