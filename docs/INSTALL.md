@@ -3,59 +3,27 @@
 ## What You Need
 
 - A Windows PC (Windows 10 or 11).
-- One file: `screamlock.exe` (from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page or the `build` folder if you built it yourself).
+- Two files: `screamlock.exe` and `screamlock-config.exe` (from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page or the `build` folder if you built it yourself).
 
-## Step 1: Place the Program
+## Step 1: Place the Programs
 
 1. Create a folder that only you (the parent) use, for example:  
    `C:\Programs\ScreamLock`
-2. Copy `screamlock.exe` into that folder.
+2. Copy **screamlock.exe** and **screamlock-config.exe** into that folder.
 
-Do **not** put it on the Desktop or in a place the child can easily find or delete.
+Do **not** put them on the Desktop or in a place the child can easily find or delete.
 
 ## Step 2: Choose the Microphone (First-Time Setup)
 
-1. Open **Command Prompt** or **PowerShell** (right-click → Run as administrator is not required; your user account is enough).
-2. Go to the folder where you put the program, for example:
-   ```bat
-   cd C:\Programs\ScreamLock
-   ```
-3. Run:
-   ```bat
-   screamlock.exe -list-devices
-   ```
-4. A folder will open showing a file named `devices.txt` (and later `config.json`). The folder is usually:
-   `%APPDATA%\ScreamLock`  
-   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
-5. Open `devices.txt` in Notepad. You will see a list of microphones with **ID** and **Name**.
-6. If you want to use the **default Windows microphone**, you can leave the config as is (see Step 3).  
-   If you want a **specific microphone** (e.g. headset mic), copy the full **ID** line (the long line under "ID:") and keep it for Step 3.
+1. Double-click **screamlock-config.exe** (ScreamLock Config). A small window opens.
+2. In **Microphone**, choose the device to monitor (e.g. headset mic) or leave **“(Default microphone)”**.
+3. Adjust **Sensitivity (dB)** if needed: more negative = less sensitive (e.g. `-60`); less negative = more sensitive (e.g. `-40`). Default `-50` is a good start.
+4. Set **Check every (seconds)** (default 1).
+5. Click **Save**. The window closes and the settings are stored for the main app.
 
-## Step 3: Configure the Program
+*(Advanced: you can instead run `screamlock.exe -list-devices` and edit `config.json` in `%APPDATA%\ScreamLock`.)*
 
-1. In the same folder as `devices.txt`, open or create `config.json`.
-2. If the file does not exist, create it with this content (or copy from `config.example.json` in the project):
-   ```json
-   {
-     "device_id": "",
-     "threshold_db": -50,
-     "check_interval_seconds": 1
-   }
-   ```
-3. Set the microphone:
-   - **Default microphone:** leave `"device_id": ""` as is.
-   - **Specific microphone:** paste the ID you copied from `devices.txt` between the quotes:
-     ```json
-     "device_id": "{0.0.1.00000000}.{GUID-here}",
-     ```
-4. Adjust sensitivity (optional):
-   - `threshold_db`: how loud the sound must be to trigger a lock.  
-     - More negative = less sensitive (e.g. `-60` = only very loud sounds).  
-     - Less negative = more sensitive (e.g. `-40` = quieter sounds can trigger).  
-     - Default `-50` is a good starting point.
-5. Save `config.json`.
-
-## Step 4: Run at Startup (Task Scheduler)
+## Step 3: Run at Startup (Task Scheduler)
 
 So that ScreamLock starts when the computer boots and runs in the background:
 
@@ -86,7 +54,7 @@ So that ScreamLock starts when the computer boots and runs in the background:
 
 After the next logon, ScreamLock will start automatically. There is no window; it runs in the background.
 
-## Step 5: Verify It’s Running
+## Step 4: Verify It's Running It’s Running
 
 - After logging in, check the log file:  
   `%APPDATA%\ScreamLock\screamlock.log`  
@@ -98,7 +66,7 @@ After the next logon, ScreamLock will start automatically. There is no window; i
 
 - **Stop:** In Task Scheduler, right-click the ScreamLock task → **Disable** (or **End** if it’s running).
 - **Change microphone or sensitivity:**  
-  Edit `%APPDATA%\ScreamLock\config.json`, then either restart the task or log off and log on again so ScreamLock restarts with the new config.
+  Run **screamlock-config.exe** again, choose the new options, and click Save. Then restart the task or log off and log on so ScreamLock picks up the new config.
 
 ## Troubleshooting
 

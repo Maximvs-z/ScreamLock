@@ -12,7 +12,7 @@ ScreamLock monitors the microphone input level and **locks the Windows session**
 - **Samples the microphone** at a set interval (default once per second).
 - **Locks the PC** (same as Win+L) when the input level goes above a threshold you set.
 - **Survives reboots** when you set it to start at login (e.g. via Task Scheduler).
-- **Lets you choose which microphone** to use via a simple config file.
+- **Lets you choose which microphone** to use via **ScreamLock Config** (small GUI) or the config file.
 - **Logs to a file** instead of showing errors on screen, so you can troubleshoot without exposing the program.
 
 The program is a **single Windows executable** (`.exe`). No installer or .NET runtime is required. You place the exe in a folder, configure it once, and optionally register it to run at startup.
@@ -32,21 +32,14 @@ The original idea was a small script that would “inconvenience” the user (e.
 2. **Put it in a folder**  
    e.g. `C:\Programs\ScreamLock`. Prefer a location the child does not usually open.
 
-3. **Pick the microphone (first time only)**  
-   - Open Command Prompt or PowerShell and go to that folder:  
-     `cd C:\Programs\ScreamLock`
-   - Run:  
-     `screamlock.exe -list-devices`
-   - A folder will open with a file `devices.txt` listing microphones and their IDs.  
-   - The config file `config.json` will be in the same folder (often `%APPDATA%\ScreamLock`).
+3. **Choose the microphone (first time only)**  
+   Run **ScreamLock Config** (`screamlock-config.exe`) from the same folder. In the small window:
+   - Pick the **Microphone** (or leave "Default microphone").
+   - Adjust **Sensitivity (dB)** if needed (more negative = less sensitive).
+   - Click **Save**.  
+   *(Alternatively you can run `screamlock.exe -list-devices` and edit `config.json` in `%APPDATA%\ScreamLock`.)*
 
-4. **Edit the config**  
-   Open `config.json` in that folder (create it from `config.example.json` if it does not exist):
-   - **device_id:** Leave `""` for the default microphone, or paste an ID from `devices.txt` to use a specific mic.
-   - **threshold_db:** How loud triggers a lock (default `-50`). More negative = less sensitive; e.g. `-40` is more sensitive.
-   - **check_interval_seconds:** How often to check (default `1`).
-
-5. **Run at startup**  
+4. **Run at startup**  
    Use **Task Scheduler** to run `screamlock.exe` at logon so it starts automatically and keeps working after restarts. Step-by-step instructions: [docs/INSTALL.md](docs/INSTALL.md).
 
 Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md)**.
@@ -61,7 +54,7 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
 - **Config file:** `config.json` — device ID, threshold (dB), and check interval.
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
-- **List devices:** Run `screamlock.exe -list-devices` to refresh the list of microphones and open the config folder.
+- **Choose microphone / sensitivity:** Run **screamlock-config.exe** (ScreamLock Config) — small GUI; saves to the same config. Or run `screamlock.exe -list-devices` and edit `config.json`.
 
 ---
 
@@ -90,7 +83,8 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
 
 The project layout:
 
-- `cmd/screamlock/` — main entrypoint and Windows/COM init
+- `cmd/screamlock/` — main monitor entrypoint
+- `cmd/screamlock-config/` — small GUI to choose microphone and sensitivity (Windows only)
 - `config/` — config load/save (JSON)
 - `internal/audio/` — Windows capture device enumeration and peak level (WASAPI via go-wca)
 - `internal/lock/` — Windows LockWorkStation

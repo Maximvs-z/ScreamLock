@@ -8,12 +8,18 @@
 
 ### Windows (Command Prompt or PowerShell)
 
+**Main app (background monitor):**
 ```bat
 cd path\to\ScreamLock
 go build -ldflags "-H windowsgui" -o build\screamlock.exe .\cmd\screamlock
 ```
 
-Or run the script:
+**Config app (GUI to choose microphone):**
+```bat
+go build -o build\screamlock-config.exe .\cmd\screamlock-config
+```
+
+Or run the script to build both:
 
 ```bat
 build\build.bat
@@ -24,14 +30,16 @@ build\build.bat
 ```bash
 cd /path/to/ScreamLock
 GOOS=windows GOARCH=amd64 go build -ldflags "-H windowsgui" -o build/screamlock.exe ./cmd/screamlock
+GOOS=windows GOARCH=amd64 go build -o build/screamlock-config.exe ./cmd/screamlock-config
 ```
 
 The `-H windowsgui` flag makes the executable a Windows GUI application so that **no console window** appears when it runs. This is required for the background “stealth” behavior.
 
 ## Output
 
-- **Path:** `build/screamlock.exe`
-- **Single executable:** no separate DLLs or runtime; safe to copy to another Windows PC.
+- **screamlock.exe** — main monitor (no window; use Task Scheduler to run at logon).
+- **screamlock-config.exe** — small GUI to choose microphone and sensitivity.
+- Single executables: no separate DLLs or runtime; safe to copy to another Windows PC.
 
 ## Running locally (development)
 
