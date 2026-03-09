@@ -19,13 +19,14 @@ The program is a **single Windows executable** (`.exe`). No installer or .NET ru
 
 ### When the threshold is exceeded
 
-When the configured sound threshold is exceeded, the application:
+When the configured sound threshold is exceeded, the application starts a warning sequence:
 
-1. **Plays a short warning tone** (system beep).
-2. **Says “Please lower your voice.”** (Windows text-to-speech; can be turned off in config).
-3. **Locks the Windows session** (about 1 second after the voice starts).
+1. **Warning tone** — A short system beep plays immediately.
+2. **Grace period** — For about 1.5 seconds after the tone, the microphone level is checked repeatedly. **If the level drops below the threshold during this time, the sequence is cancelled** and the app returns to normal monitoring (no voice, no lock). If the level stays at or above the threshold for the full 1.5 seconds, the sequence continues.
+3. **Voice** — The app says “Please lower your voice.” (Windows text-to-speech; can be turned off in config).
+4. **Lock** — About 1 second after the voice starts, the Windows session is locked.
 
-This sequence gives clear feedback before the lock so the user understands why the screen locked. After a lock, monitoring pauses for a **cooldown** (default 15 seconds, configurable) to avoid repeated triggers.
+So if the user lowers their voice right after the beep, the lock is avoided. After a lock, monitoring pauses for a **cooldown** (default 15 seconds, configurable) to avoid repeated triggers.
 
 ---
 

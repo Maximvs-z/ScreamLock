@@ -68,11 +68,47 @@ func escapePSString(s string) string {
 	return string(out)
 }
 
+// GracePeriodDuration is how long to wait after the tone while re-checking the mic (1.5 seconds).
+const GracePeriodDuration = 1500 * time.Millisecond
+
+// GracePeriodSampleInterval is how often to sample during the grace period.
+const GracePeriodSampleInterval = 100 * time.Millisecond
+
+// RunGracePeriod runs for approximately GracePeriodDuration, sampling the current peak via samplePeak.
+// If any sample is below threshold, returns false (sequence should be cancelled).
+// If the full duration elapses with level always at or above threshold, returns true (proceed to voice/lock).
+func RunGracePeriod(samplePeak func() float32, thresholdLinear float32) bool {
+	deadline := time.Now().Add(GracePeriodDuration)
+	for time.Now().Before(deadline) {
+		peak := samplePeak()
+		if peak < thresholdLinear {
+			return false
+		}
+		time.Sleep(GracePeriodSampleInterval)
+	}
+	return true
+}
+
 // RunSequence runs the three-stage sequence: tone, optional voice, wait, then calls lockFn.
 // If enableVoice is false, only plays tone then waits ~0.3s then calls lockFn.
 // If enableVoice is true: tone, start voice, wait 1s from voice start, call lockFn.
+// Does not include the grace period — caller should run RunGracePeriod after PlayTone and only call RunSequenceRest if it returns true.
 func RunSequence(enableVoice bool, lockFn func()) {
 	PlayTone()
+	if enableVoice {
+		SpeakAsync("Please lower your voice.")
+		time.Sleep(1 * time.Second)
+	} else {
+		time.Sleep(300 * time.Millisecond)
+	}
+	if lockFn != nil {
+		lockFn()
+	}
+}
+
+// RunSequenceRest runs the part after the grace period: optional voice, wait, then lockFn.
+// Call this only when RunGracePeriod returned true.
+func RunSequenceRest(enableVoice bool, lockFn func()) {
 	if enableVoice {
 		SpeakAsync("Please lower your voice.")
 		time.Sleep(1 * time.Second)

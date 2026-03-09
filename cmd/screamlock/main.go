@@ -136,8 +136,26 @@ func runMonitor(cfg config.Config) {
 			inSequence = true
 			inSequenceMu.Unlock()
 
-			logger.Infof("Peak %.4f above threshold %.4f — playing warning then locking", peak, thresholdLinear)
-			warning.RunSequence(cfg.EnableVoiceWarning, func() {
+			logger.Infof("Peak %.4f above threshold %.4f — playing warning tone", peak, thresholdLinear)
+			warning.PlayTone()
+
+			// Grace period: ~1.5 s; keep measuring. If level drops below threshold, cancel and return to monitoring.
+			samplePeak := func() float32 {
+				p, _ := reader.Peak()
+				return p
+			}
+			if !warning.RunGracePeriod(samplePeak, thresholdLinear) {
+				logger.Infof("Level fell below threshold during grace period — sequence cancelled")
+				inSequenceMu.Lock()
+				inSequence = false
+				inSequenceMu.Unlock()
+				time.Sleep(interval)
+				continue
+			}
+
+			// Level stayed above threshold: play voice (if enabled), wait 1 s, then lock
+			logger.Infof("Grace period ended with level still above threshold — locking")
+			warning.RunSequenceRest(cfg.EnableVoiceWarning, func() {
 				if lock.LockWorkStation() {
 					logger.Infof("Workstation locked")
 				} else {
