@@ -38,14 +38,17 @@ The original idea was a small script that would “inconvenience” the user (e.
 
 ## Quick Start (For Parents)
 
-**Easiest:** Run **ScreamLock Setup** (`screamlock-setup.exe`). It’s a short wizard (Next → Next → Finish) that asks if you want ScreamLock to run at Windows startup, then opens the microphone dialog where you can pick the mic, set the sensitivity, and **test the input level with a live meter** (the PC does not lock in that screen).
+**Single-file installer (recommended):**  
+Download **ScreamLock-Setup.exe** from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page. Run it **as Administrator** (right-click → Run as administrator). It installs `screamlock.exe` and `screamlock-config.exe` to `C:\Program Files\ScreamLock` and adds a task to run ScreamLock at logon. Then open **screamlock-config.exe** from that folder to choose your microphone and settings.
+
+**Alternative — wizard only:** Run **ScreamLock Setup** (`screamlock-setup.exe`) from a folder where you’ve placed the exes. It’s a short wizard that asks about autostart and opens the microphone dialog with a level meter.
 
 **Manual setup:**
 
 1. **Get the programs**  
-   Download from [Releases](https://github.com/Maximvs-z/ScreamLock/releases): `screamlock.exe`, `screamlock-config.exe`, and optionally `screamlock-setup.exe` (the installer).
+   From [Releases](https://github.com/Maximvs-z/ScreamLock/releases): use **ScreamLock-Setup.exe** (installer) or download `screamlock.exe`, `screamlock-config.exe`, and optionally `screamlock-setup.exe`.
 2. **Put them in a folder**  
-   e.g. `C:\Programs\ScreamLock`. Prefer a location the child does not usually open.
+   e.g. `C:\Programs\ScreamLock`. (Or use the installer to install to Program Files.)
 3. **Choose the microphone**  
    Run **screamlock-config.exe** (or use the installer). Pick the microphone, set sensitivity (dB), and in the installer you get a **live level meter** to test without locking.
 4. **Run at startup**  
@@ -63,8 +66,9 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
 - **Config file:** `config.json` — device ID, threshold (dB), check interval, **cooldown_seconds** (pause after a lock), and **enable_voice_warning** (if `false`, only the tone plays before lock; if `true`, tone + spoken message + lock).
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
-- **Installer:** **screamlock-setup.exe** — wizard (autostart question → Finish) then microphone dialog with **live level meter** (test without locking).  
-- **Config only:** **screamlock-config.exe** — pick microphone, sensitivity, and **Run at Windows startup**. Saves to the same config.
+- **ScreamLock-Setup.exe** — Single-file installer (from Releases). Run as Administrator to install to `C:\Program Files\ScreamLock` and set up logon task.  
+- **screamlock-setup.exe** — Wizard (autostart question → Finish) then microphone dialog with **live level meter** (use when exes are already in a folder).  
+- **screamlock-config.exe** — Pick microphone, sensitivity, and **Run at Windows startup**. Saves to the same config.
 
 ---
 
@@ -95,13 +99,28 @@ The project layout:
 
 - `cmd/screamlock/` — main monitor entrypoint
 - `cmd/screamlock-config/` — small GUI to choose microphone and sensitivity (Windows only)
-- `cmd/screamlock-setup/` — “next, next, next” installer and microphone dialog with live level meter (Windows only)
+- `cmd/screamlock-setup/` — “next, next, next” wizard and microphone dialog with live level meter (Windows only)
+- `cmd/installer/` — single-file installer that installs to Program Files (Windows only)
 - `config/` — config load/save (JSON)
 - `internal/audio/` — Windows capture device enumeration and peak level (WASAPI via go-wca)
 - `internal/lock/` — Windows LockWorkStation
 - `internal/logger/` — file logging
 - `docs/` — installation and build docs
 - `config.example.json` — example config
+
+---
+
+## Creating a release (for maintainers)
+
+To publish a release so others can download **ScreamLock-Setup.exe**:
+
+1. Create and push a version tag (e.g. `v1.0.0`):
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+2. The [release workflow](.github/workflows/release.yml) runs on GitHub Actions: it builds the installer and creates a **Release** with **ScreamLock-Setup.exe** attached.
+3. Users download the installer from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page and run it as Administrator.
 
 ---
 

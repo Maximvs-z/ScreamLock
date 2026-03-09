@@ -13,3 +13,5 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 go build -o build\screamlock-setup.exe .\cmd\screamlock-setup
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 echo Built: build\screamlock.exe, build\screamlock-config.exe, build\screamlock-setup.exe
+echo.
+echo To build the single-file installer (for Program Files): run build\build-installer.bat

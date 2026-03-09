@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build screamlock.exe
+        run: |
+          $env:GOOS = "windows"
+          $env:GOARCH = "amd64"
+          go build -ldflags "-H windowsgui" -o build/screamlock.exe ./cmd/screamlock
+
+      - name: Build screamlock-config.exe
+        run: |
+          $env:GOOS = "windows"
+          $env:GOARCH = "amd64"
+          go build -o build/screamlock-config.exe ./cmd/screamlock-config
+
+      - name: Prepare installer embed files
+        run: |
+          New-Item -ItemType Directory -Force -Path cmd/installer/files
+          Copy-Item build/screamlock.exe cmd/installer/files/
+          Copy-Item build/screamlock-config.exe cmd/installer/files/
+
+      - name: Build installer (ScreamLock-Setup.exe)
+        run: |
+          $env:GOOS = "windows"
+          $env:GOARCH = "amd64"
+          go build -o build/ScreamLock-Setup.exe ./cmd/installer
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/ScreamLock-Setup.exe
+          generate_release_notes: true
+          body: |
+            **ScreamLock-Setup.exe** — Single-file installer. Run it (as Administrator) to install ScreamLock and ScreamLock Config to `C:\Program Files\ScreamLock` and optionally add a task to run at Windows logon.
+
+            After installation, open **screamlock-config.exe** from that folder to choose your microphone and settings.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

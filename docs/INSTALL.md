@@ -3,7 +3,16 @@
 ## What You Need
 
 - A Windows PC (Windows 10 or 11).
-- From [Releases](https://github.com/Maximvs-z/ScreamLock/releases) or the `build` folder: **screamlock.exe**, **screamlock-config.exe**, and **screamlock-setup.exe** (the installer).
+- **Easiest:** Download **ScreamLock-Setup.exe** from [Releases](https://github.com/Maximvs-z/ScreamLock/releases) (single-file installer).  
+- **Or** from Releases or the `build` folder: **screamlock.exe**, **screamlock-config.exe**, and **screamlock-setup.exe**.
+
+## Option A: Single-file installer (recommended)
+
+1. Download **ScreamLock-Setup.exe** from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page.
+2. Right-click it → **Run as administrator**. It installs to `C:\Program Files\ScreamLock` and adds a task to run ScreamLock when you log on.
+3. Open **screamlock-config.exe** from that folder (e.g. via Start menu or `C:\Program Files\ScreamLock`) to choose your microphone and settings. Use the **Test level** bar to test without locking.
+
+## Option B: Manual placement, then wizard
 
 ## Step 1: Place the Programs
 

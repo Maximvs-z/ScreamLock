@@ -3,6 +3,10 @@ build/*.exe
 !build/README.md
 !build/build.bat
 
+# Installer embedded exes (copied by build script)
+cmd/installer/files/*.exe
+!cmd/installer/files/.gitkeep
+
 # Go
 *.exe
 *.test
