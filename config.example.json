@@ -1,0 +1,5 @@
+{
+  "device_id": "",
+  "threshold_db": -50,
+  "check_interval_seconds": 1
+}

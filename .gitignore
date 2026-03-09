@@ -1,0 +1,16 @@
+# Build output
+build/*.exe
+!build/README.md
+!build/build.bat
+
+# Go
+*.exe
+*.test
+vendor/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
