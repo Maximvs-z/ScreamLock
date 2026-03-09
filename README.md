@@ -39,7 +39,7 @@ The original idea was a small script that would “inconvenience” the user (e.
 ## Quick Start (For Parents)
 
 **Single-file installer (recommended):**  
-Download **ScreamLock-Setup.exe** from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page. Run it **as Administrator** (right-click → Run as administrator). It installs `screamlock.exe` and `screamlock-config.exe` to `C:\Program Files\ScreamLock` and adds a task to run ScreamLock at logon. Then open **screamlock-config.exe** from that folder to choose your microphone and settings.
+Download **ScreamLock-Setup.exe** from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page and run it. Windows will show an administrator prompt (UAC); choose **Yes** (or enter your password). The installer copies the apps to `C:\Program Files\ScreamLock`, adds a task to run ScreamLock at logon, and then **opens the config app** so you can choose your microphone and settings.
 
 **Alternative — wizard only:** Run **ScreamLock Setup** (`screamlock-setup.exe`) from a folder where you’ve placed the exes. It’s a short wizard that asks about autostart and opens the microphone dialog with a level meter.
 
@@ -66,7 +66,7 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
 - **Config file:** `config.json` — device ID, threshold (dB), check interval, **cooldown_seconds** (pause after a lock), and **enable_voice_warning** (if `false`, only the tone plays before lock; if `true`, tone + spoken message + lock).
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
-- **ScreamLock-Setup.exe** — Single-file installer (from Releases). Run as Administrator to install to `C:\Program Files\ScreamLock` and set up logon task.  
+- **ScreamLock-Setup.exe** — Single-file installer (from Releases). Prompts for Administrator (UAC), installs to `C:\Program Files\ScreamLock`, sets up logon task, then opens the config app.  
 - **screamlock-setup.exe** — Wizard (autostart question → Finish) then microphone dialog with **live level meter** (use when exes are already in a folder).  
 - **screamlock-config.exe** — Pick microphone, sensitivity, and **Run at Windows startup**. Saves to the same config.
 
@@ -120,7 +120,7 @@ To publish a release so others can download **ScreamLock-Setup.exe**:
    git push origin v1.0.0
    ```
 2. The [release workflow](.github/workflows/release.yml) runs on GitHub Actions: it builds the installer and creates a **Release** with **ScreamLock-Setup.exe** attached.
-3. Users download the installer from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page and run it as Administrator.
+3. Users download the installer from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page; when they run it, Windows prompts for Administrator (UAC) and the installer then opens the config app.
 
 ---
 

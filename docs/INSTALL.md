@@ -9,8 +9,8 @@
 ## Option A: Single-file installer (recommended)
 
 1. Download **ScreamLock-Setup.exe** from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page.
-2. Right-click it → **Run as administrator**. It installs to `C:\Program Files\ScreamLock` and adds a task to run ScreamLock when you log on.
-3. Open **screamlock-config.exe** from that folder (e.g. via Start menu or `C:\Program Files\ScreamLock`) to choose your microphone and settings. Use the **Test level** bar to test without locking.
+2. Run it (double-click). Windows will show an administrator prompt (UAC); choose **Yes** (or enter your password). The installer copies the apps to `C:\Program Files\ScreamLock` and adds a task to run ScreamLock when you log on.
+3. The installer **opens the config app** automatically. Choose your microphone and settings there; use the **Test level** bar to test without locking. (You can also open **screamlock-config.exe** later from `C:\Program Files\ScreamLock` or the Start menu.)
 
 ## Option B: Manual placement, then wizard
 

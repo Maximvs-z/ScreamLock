@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -27,6 +28,12 @@ const (
 var embedded embed.FS
 
 func main() {
+	// If not running as admin, re-launch with UAC (Yes/password) and exit
+	if !isAdmin() {
+		runElevated()
+		os.Exit(0)
+	}
+
 	programFiles := os.Getenv("ProgramFiles")
 	if programFiles == "" {
 		programFiles = `C:\Program Files`
@@ -58,7 +65,10 @@ func main() {
 	screamlockExe := filepath.Join(installDir, "screamlock.exe")
 	_ = createLogonTask(screamlockExe)
 
-	showInfo("ScreamLock has been installed to:\n" + installDir + "\n\nscreamlock.exe — runs in the background (no window).\nscreamlock-config.exe — choose microphone and settings.\n\nA task was added to run ScreamLock when you log on. Open screamlock-config.exe to change the microphone or disable autostart.")
+	configExe := filepath.Join(installDir, "screamlock-config.exe")
+	_ = exec.Command(configExe).Start()
+
+	showInfo("ScreamLock has been installed to:\n" + installDir + "\n\nscreamlock-config.exe has been opened so you can choose your microphone and settings.\n\nA task was added to run ScreamLock when you log on. Use the config app to change the microphone or disable autostart.")
 }
 
 var (
@@ -91,4 +101,40 @@ func mustUTF16(s string) *uint16 {
 func createLogonTask(exePath string) error {
 	cmd := exec.Command("schtasks", "/Create", "/TN", taskName, "/TR", exePath, "/SC", "ONLOGON", "/F")
 	return cmd.Run()
+}
+
+func isAdmin() bool {
+	f, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	if err != nil {
+		return false
+	}
+	f.Close()
+	return true
+}
+
+func runElevated() {
+	exe, err := os.Executable()
+	if err != nil {
+		showError("Could not get executable path: " + err.Error())
+		return
+	}
+	cwd, _ := os.Getwd()
+	var args string
+	if len(os.Args) > 1 {
+		args = strings.Join(os.Args[1:], " ")
+	}
+	shell32 := syscall.NewLazyDLL("shell32.dll")
+	shellExecuteW := shell32.NewProc("ShellExecuteW")
+	const SW_SHOWNORMAL = 1
+	r1, _, _ := shellExecuteW.Call(
+		0,
+		uintptr(unsafe.Pointer(mustUTF16("runas"))),
+		uintptr(unsafe.Pointer(mustUTF16(exe))),
+		uintptr(unsafe.Pointer(mustUTF16(args))),
+		uintptr(unsafe.Pointer(mustUTF16(cwd))),
+		SW_SHOWNORMAL,
+	)
+	if r1 <= 32 {
+		showError("This installer needs Administrator rights. Please allow when Windows asks, or right-click the installer and choose \"Run as administrator\".")
+	}
 }
