@@ -17,6 +17,10 @@ type Config struct {
 	ThresholdDB float64 `json:"threshold_db"`
 	// CheckIntervalSeconds is how often to sample the microphone (default 1).
 	CheckIntervalSeconds int `json:"check_interval_seconds"`
+	// CooldownSeconds is how long to wait after a lock before monitoring resumes (default 15).
+	CooldownSeconds int `json:"cooldown_seconds"`
+	// EnableVoiceWarning: if true, play tone then speak "Please lower your voice." then lock; if false, tone then lock only.
+	EnableVoiceWarning bool `json:"enable_voice_warning"`
 }
 
 // DefaultConfig returns sensible defaults matching the original script (-50 dB, 1 second).
@@ -25,6 +29,8 @@ func DefaultConfig() Config {
 		DeviceID:             "",
 		ThresholdDB:          -50,
 		CheckIntervalSeconds: 1,
+		CooldownSeconds:      15,
+		EnableVoiceWarning:   true,
 	}
 }
 
@@ -69,6 +75,9 @@ func Load() (Config, string, error) {
 	}
 	if cfg.CheckIntervalSeconds <= 0 {
 		cfg.CheckIntervalSeconds = 1
+	}
+	if cfg.CooldownSeconds <= 0 {
+		cfg.CooldownSeconds = 15
 	}
 	return cfg, path, nil
 }

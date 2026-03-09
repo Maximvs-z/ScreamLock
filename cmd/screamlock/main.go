@@ -12,12 +12,14 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/screamlock/screamlock/config"
 	"github.com/screamlock/screamlock/internal/audio"
 	"github.com/screamlock/screamlock/internal/lock"
 	"github.com/screamlock/screamlock/internal/logger"
+	"github.com/screamlock/screamlock/internal/warning"
 )
 
 func main() {
@@ -102,8 +104,16 @@ func runMonitor(cfg config.Config) {
 	if interval < time.Second {
 		interval = time.Second
 	}
+	cooldown := time.Duration(cfg.CooldownSeconds) * time.Second
+	if cooldown < time.Second {
+		cooldown = 15 * time.Second
+	}
 
-	logger.Infof("ScreamLock monitoring (threshold %.2f dB = %.4f linear); interval %v", cfg.ThresholdDB, thresholdLinear, interval)
+	logger.Infof("ScreamLock monitoring (threshold %.2f dB = %.4f linear); interval %v; cooldown %v; voice warning %v",
+		cfg.ThresholdDB, thresholdLinear, interval, cooldown, cfg.EnableVoiceWarning)
+
+	var inSequenceMu sync.Mutex
+	inSequence := false
 
 	for {
 		peak, err := reader.Peak()
@@ -112,15 +122,36 @@ func runMonitor(cfg config.Config) {
 			time.Sleep(interval)
 			continue
 		}
+
+		inSequenceMu.Lock()
+		busy := inSequence
+		inSequenceMu.Unlock()
+		if busy {
+			time.Sleep(interval)
+			continue
+		}
+
 		if peak > thresholdLinear {
-			logger.Infof("Peak %.4f above threshold %.4f — locking workstation", peak, thresholdLinear)
-			if lock.LockWorkStation() {
-				logger.Infof("Workstation locked")
-			} else {
-				logger.Errorf("LockWorkStation failed")
-			}
-			// Brief cooldown after lock to avoid immediate re-lock
-			time.Sleep(5 * time.Second)
+			inSequenceMu.Lock()
+			inSequence = true
+			inSequenceMu.Unlock()
+
+			logger.Infof("Peak %.4f above threshold %.4f — playing warning then locking", peak, thresholdLinear)
+			warning.RunSequence(cfg.EnableVoiceWarning, func() {
+				if lock.LockWorkStation() {
+					logger.Infof("Workstation locked")
+				} else {
+					logger.Errorf("LockWorkStation failed")
+				}
+			})
+
+			// Cooldown before monitoring resumes
+			logger.Infof("Cooldown %v before resuming monitoring", cooldown)
+			time.Sleep(cooldown)
+
+			inSequenceMu.Lock()
+			inSequence = false
+			inSequenceMu.Unlock()
 		}
 		time.Sleep(interval)
 	}

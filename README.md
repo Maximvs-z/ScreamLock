@@ -10,12 +10,22 @@ ScreamLock monitors the microphone input level and **locks the Windows session**
 
 - **Runs in the background** with no visible window, so it is not easily discovered or closed by the child.
 - **Samples the microphone** at a set interval (default once per second).
-- **Locks the PC** (same as Win+L) when the input level goes above a threshold you set.
+- When the level goes above your threshold, it runs a **three-stage warning** (see below), then **locks the PC** (same as Win+L).
 - **Survives reboots** when you set it to start at login (e.g. via Task Scheduler).
 - **Lets you choose which microphone** to use via **ScreamLock Config** (small GUI) or the config file.
 - **Logs to a file** instead of showing errors on screen, so you can troubleshoot without exposing the program.
 
 The program is a **single Windows executable** (`.exe`). No installer or .NET runtime is required. You place the exe in a folder, configure it once, and optionally register it to run at startup.
+
+### When the threshold is exceeded
+
+When the configured sound threshold is exceeded, the application:
+
+1. **Plays a short warning tone** (system beep).
+2. **Says “Please lower your voice.”** (Windows text-to-speech; can be turned off in config).
+3. **Locks the Windows session** (about 1 second after the voice starts).
+
+This sequence gives clear feedback before the lock so the user understands why the screen locked. After a lock, monitoring pauses for a **cooldown** (default 15 seconds, configurable) to avoid repeated triggers.
 
 ---
 
@@ -50,7 +60,7 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
 - **Config folder:** Config and log files are stored under your user profile, typically:  
   `%APPDATA%\ScreamLock`  
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
-- **Config file:** `config.json` — device ID, threshold (dB), and check interval.
+- **Config file:** `config.json` — device ID, threshold (dB), check interval, **cooldown_seconds** (pause after a lock), and **enable_voice_warning** (if `false`, only the tone plays before lock; if `true`, tone + spoken message + lock).
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
 - **Installer:** **screamlock-setup.exe** — wizard (autostart question → Finish) then microphone dialog with **live level meter** (test without locking).  
 - **Config only:** **screamlock-config.exe** — pick microphone, sensitivity, and **Run at Windows startup**. Saves to the same config.
