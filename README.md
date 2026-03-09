@@ -40,7 +40,7 @@ The original idea was a small script that would “inconvenience” the user (e.
    *(Alternatively you can run `screamlock.exe -list-devices` and edit `config.json` in `%APPDATA%\ScreamLock`.)*
 
 4. **Run at startup**  
-   Use **Task Scheduler** to run `screamlock.exe` at logon so it starts automatically and keeps working after restarts. Step-by-step instructions: [docs/INSTALL.md](docs/INSTALL.md).
+   In **ScreamLock Config**, click **"Run at Windows startup"** so ScreamLock starts when you log on and keeps working after restarts. Or set it up manually via Task Scheduler — see [docs/INSTALL.md](docs/INSTALL.md).
 
 Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md)**.
 
@@ -54,7 +54,7 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
 - **Config file:** `config.json` — device ID, threshold (dB), and check interval.
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
-- **Choose microphone / sensitivity:** Run **screamlock-config.exe** (ScreamLock Config) — small GUI; saves to the same config. Or run `screamlock.exe -list-devices` and edit `config.json`.
+- **Choose microphone / sensitivity / startup:** Run **screamlock-config.exe** (ScreamLock Config) — small GUI to pick microphone, sensitivity, and to set **Run at Windows startup** (Task Scheduler). Saves to the same config.
 
 ---
 

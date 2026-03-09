@@ -23,38 +23,17 @@ Do **not** put them on the Desktop or in a place the child can easily find or de
 
 *(Advanced: you can instead run `screamlock.exe -list-devices` and edit `config.json` in `%APPDATA%\ScreamLock`.)*
 
-## Step 3: Run at Startup (Task Scheduler)
+## Step 3: Run at Startup
 
-So that ScreamLock starts when the computer boots and runs in the background:
+So that ScreamLock starts when you log on and keeps working after restarts:
 
-1. Press **Win + R**, type `taskschd.msc`, press Enter (Task Scheduler).
-2. On the right, click **Create Basic Task**.
-3. **Name:** e.g. `ScreamLock`  
-   **Description:** e.g. `Monitor microphone and lock when too loud`  
-   Next.
-4. **Trigger:** **When I log on**  
-   Next.
-5. **Action:** **Start a program**  
-   Next.
-6. **Program/script:**  
-   `C:\Programs\ScreamLock\screamlock.exe`  
-   (use the path where you actually put the file.)
-7. **Add arguments:** leave empty.
-8. **Start in:**  
-   `C:\Programs\ScreamLock`  
-   (same folder as the exe.)
-9. Next → Finish.
-10. In the task list, right-click the new **ScreamLock** task → **Properties**.
-11. **General** tab:
-    - Check **Run with highest privileges** only if you need it (usually not).
-    - Select **Run whether user is logged on or not** if you want it to run before login (advanced); for most users, keep **Run only when user is logged on**.
-12. **Settings** tab (optional):
-    - Uncheck **Stop the task if it runs longer than** (so it can run indefinitely).
-13. OK.
+**Easiest:** In **ScreamLock Config**, click **"Run at Windows startup"**. This creates a scheduled task for you. Done.
+
+**Manual (optional):** If you prefer to set it up yourself, press **Win + R**, type `taskschd.msc`, press Enter, then **Create Basic Task** → Name: `ScreamLock` → Trigger: **When I log on** → Action: **Start a program** → Program: `C:\Programs\ScreamLock\screamlock.exe` (use your folder) → Finish. In the task list, right-click **ScreamLock** → **Properties** → **Settings** → uncheck **Stop the task if it runs longer than**.
 
 After the next logon, ScreamLock will start automatically. There is no window; it runs in the background.
 
-## Step 4: Verify It's Running It’s Running
+## Step 4: Verify It's Running
 
 - After logging in, check the log file:  
   `%APPDATA%\ScreamLock\screamlock.log`  

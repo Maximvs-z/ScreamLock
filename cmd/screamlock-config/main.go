@@ -8,6 +8,9 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
 
 	"github.com/go-ole/go-ole"
 	"github.com/lxn/walk"
@@ -15,6 +18,8 @@ import (
 	"github.com/screamlock/screamlock/config"
 	"github.com/screamlock/screamlock/internal/audio"
 )
+
+const taskName = "ScreamLock"
 
 type deviceItem struct {
 	ID   string
@@ -63,7 +68,7 @@ func main() {
 	_, err = declarative.MainWindow{
 		AssignTo: &mw,
 		Title:    "ScreamLock Config",
-		MinSize:  declarative.Size{Width: 420, Height: 220},
+		MinSize:  declarative.Size{Width: 420, Height: 280},
 		Layout:   declarative.VBox{MarginsZero: true},
 		Children: []declarative.Widget{
 			declarative.Composite{
@@ -95,6 +100,34 @@ func main() {
 						MaxValue: 60,
 						Decimals: 0,
 					},
+				},
+			},
+			declarative.Composite{
+				Layout: declarative.HBox{},
+				Children: []declarative.Widget{
+					declarative.Label{Text: "Startup:"},
+					declarative.PushButton{
+						Text: "Run at Windows startup",
+						OnClicked: func() {
+							exePath, err := os.Executable()
+							if err != nil {
+								walk.MsgBox(mw, "Error", "Could not find program location: "+err.Error(), walk.MsgBoxIconError)
+								return
+							}
+							screamlockExe := filepath.Join(filepath.Dir(exePath), "screamlock.exe")
+							if _, err := os.Stat(screamlockExe); err != nil {
+								walk.MsgBox(mw, "Error", "screamlock.exe not found in the same folder as this program.\n\nPlace both exe files in the same folder (e.g. C:\\Programs\\ScreamLock).", walk.MsgBoxIconError)
+								return
+							}
+							cmd := exec.Command("schtasks", "/Create", "/TN", taskName, "/TR", screamlockExe, "/SC", "ONLOGON", "/F")
+							if out, err := cmd.CombinedOutput(); err != nil {
+								walk.MsgBox(mw, "Error", "Could not create startup task:\n"+err.Error()+"\n\n"+string(out), walk.MsgBoxIconError)
+								return
+							}
+							walk.MsgBox(mw, "Done", "ScreamLock is now set to run when you log on to Windows. It will start automatically after each restart.", walk.MsgBoxIconInformation)
+						},
+					},
+					declarative.HSpacer{},
 				},
 			},
 			declarative.Composite{
