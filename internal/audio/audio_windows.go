@@ -181,3 +181,11 @@ func LinearFromDB(dB float64) float32 {
 	}
 	return float32(linear)
 }
+
+// DBFromLinear converts linear peak (0..1) to dB for display. Useful for level meters.
+func DBFromLinear(linear float32) float64 {
+	if linear <= 0 {
+		return -100
+	}
+	return 20 * math.Log10(float64(linear))
+}

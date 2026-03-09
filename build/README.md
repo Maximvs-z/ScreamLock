@@ -19,7 +19,12 @@ go build -ldflags "-H windowsgui" -o build\screamlock.exe .\cmd\screamlock
 go build -o build\screamlock-config.exe .\cmd\screamlock-config
 ```
 
-Or run the script to build both:
+**Setup installer (wizard + microphone dialog with level meter):**
+```bat
+go build -o build\screamlock-setup.exe .\cmd\screamlock-setup
+```
+
+Or run the script to build all three:
 
 ```bat
 build\build.bat
@@ -31,6 +36,7 @@ build\build.bat
 cd /path/to/ScreamLock
 GOOS=windows GOARCH=amd64 go build -ldflags "-H windowsgui" -o build/screamlock.exe ./cmd/screamlock
 GOOS=windows GOARCH=amd64 go build -o build/screamlock-config.exe ./cmd/screamlock-config
+GOOS=windows GOARCH=amd64 go build -o build/screamlock-setup.exe ./cmd/screamlock-setup
 ```
 
 The `-H windowsgui` flag makes the executable a Windows GUI application so that **no console window** appears when it runs. This is required for the background “stealth” behavior.
@@ -39,6 +45,7 @@ The `-H windowsgui` flag makes the executable a Windows GUI application so that 
 
 - **screamlock.exe** — main monitor (no window; use Task Scheduler to run at logon).
 - **screamlock-config.exe** — small GUI to choose microphone and sensitivity.
+- **screamlock-setup.exe** — “next, next, next” installer: asks about autostart, adds Task Scheduler if wanted, then opens the microphone dialog with a **live level meter** so you can test input without locking the PC.
 - Single executables: no separate DLLs or runtime; safe to copy to another Windows PC.
 
 ## Running locally (development)

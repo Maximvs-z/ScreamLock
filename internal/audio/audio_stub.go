@@ -30,3 +30,8 @@ func (p *PeakReader) Close() error {
 func LinearFromDB(dB float64) float32 {
 	return 0
 }
+
+// DBFromLinear stub.
+func DBFromLinear(linear float32) float64 {
+	return -100
+}

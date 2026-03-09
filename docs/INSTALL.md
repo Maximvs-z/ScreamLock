@@ -3,19 +3,21 @@
 ## What You Need
 
 - A Windows PC (Windows 10 or 11).
-- Two files: `screamlock.exe` and `screamlock-config.exe` (from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page or the `build` folder if you built it yourself).
+- From [Releases](https://github.com/Maximvs-z/ScreamLock/releases) or the `build` folder: **screamlock.exe**, **screamlock-config.exe**, and **screamlock-setup.exe** (the installer).
 
 ## Step 1: Place the Programs
 
 1. Create a folder that only you (the parent) use, for example:  
    `C:\Programs\ScreamLock`
-2. Copy **screamlock.exe** and **screamlock-config.exe** into that folder.
+2. Copy **screamlock.exe**, **screamlock-config.exe**, and **screamlock-setup.exe** into that folder.
 
 Do **not** put them on the Desktop or in a place the child can easily find or delete.
 
-## Step 2: Choose the Microphone (First-Time Setup)
+## Step 2: Run the Installer or Configure Manually
 
-1. Double-click **screamlock-config.exe** (ScreamLock Config). A small window opens.
+**Recommended:** Double-click **screamlock-setup.exe**. Click Next → Next → check "Yes, run ScreamLock when I log on" if you want autostart → Finish. The **Microphone & Test** window opens: choose microphone, set sensitivity, and use the **Test level** bar (no lock — for testing only). Save, then Done.
+
+**Or manual:** Double-click **screamlock-config.exe** (ScreamLock Config). A small window opens.
 2. In **Microphone**, choose the device to monitor (e.g. headset mic) or leave **“(Default microphone)”**.
 3. Adjust **Sensitivity (dB)** if needed: more negative = less sensitive (e.g. `-60`); less negative = more sensitive (e.g. `-40`). Default `-50` is a good start.
 4. Set **Check every (seconds)** (default 1).
@@ -33,7 +35,7 @@ So that ScreamLock starts when you log on and keeps working after restarts:
 
 After the next logon, ScreamLock will start automatically. There is no window; it runs in the background.
 
-## Step 4: Verify It's Running
+## Step 3: Verify It's Running
 
 - After logging in, check the log file:  
   `%APPDATA%\ScreamLock\screamlock.log`  

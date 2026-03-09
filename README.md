@@ -27,20 +27,18 @@ The original idea was a small script that would “inconvenience” the user (e.
 
 ## Quick Start (For Parents)
 
-1. **Get the program**  
-   Download `screamlock.exe` from the [Releases](https://github.com/Maximvs-z/ScreamLock/releases) page (or from the `build` folder if someone built it for you).
-2. **Put it in a folder**  
+**Easiest:** Run **ScreamLock Setup** (`screamlock-setup.exe`). It’s a short wizard (Next → Next → Finish) that asks if you want ScreamLock to run at Windows startup, then opens the microphone dialog where you can pick the mic, set the sensitivity, and **test the input level with a live meter** (the PC does not lock in that screen).
+
+**Manual setup:**
+
+1. **Get the programs**  
+   Download from [Releases](https://github.com/Maximvs-z/ScreamLock/releases): `screamlock.exe`, `screamlock-config.exe`, and optionally `screamlock-setup.exe` (the installer).
+2. **Put them in a folder**  
    e.g. `C:\Programs\ScreamLock`. Prefer a location the child does not usually open.
-
-3. **Choose the microphone (first time only)**  
-   Run **ScreamLock Config** (`screamlock-config.exe`) from the same folder. In the small window:
-   - Pick the **Microphone** (or leave "Default microphone").
-   - Adjust **Sensitivity (dB)** if needed (more negative = less sensitive).
-   - Click **Save**.  
-   *(Alternatively you can run `screamlock.exe -list-devices` and edit `config.json` in `%APPDATA%\ScreamLock`.)*
-
+3. **Choose the microphone**  
+   Run **screamlock-config.exe** (or use the installer). Pick the microphone, set sensitivity (dB), and in the installer you get a **live level meter** to test without locking.
 4. **Run at startup**  
-   In **ScreamLock Config**, click **"Run at Windows startup"** so ScreamLock starts when you log on and keeps working after restarts. Or set it up manually via Task Scheduler — see [docs/INSTALL.md](docs/INSTALL.md).
+   In the installer, tick “Yes, run ScreamLock when I log on”, or in **screamlock-config.exe** click **“Run at Windows startup”**.
 
 Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md)**.
 
@@ -54,7 +52,8 @@ Full installation and configuration details: **[docs/INSTALL.md](docs/INSTALL.md
   (e.g. `C:\Users\YourName\AppData\Roaming\ScreamLock`).
 - **Config file:** `config.json` — device ID, threshold (dB), and check interval.
 - **Log file:** `screamlock.log` — startup messages and errors. Use this to confirm it’s running or to troubleshoot.
-- **Choose microphone / sensitivity / startup:** Run **screamlock-config.exe** (ScreamLock Config) — small GUI to pick microphone, sensitivity, and to set **Run at Windows startup** (Task Scheduler). Saves to the same config.
+- **Installer:** **screamlock-setup.exe** — wizard (autostart question → Finish) then microphone dialog with **live level meter** (test without locking).  
+- **Config only:** **screamlock-config.exe** — pick microphone, sensitivity, and **Run at Windows startup**. Saves to the same config.
 
 ---
 
@@ -85,6 +84,7 @@ The project layout:
 
 - `cmd/screamlock/` — main monitor entrypoint
 - `cmd/screamlock-config/` — small GUI to choose microphone and sensitivity (Windows only)
+- `cmd/screamlock-setup/` — “next, next, next” installer and microphone dialog with live level meter (Windows only)
 - `config/` — config load/save (JSON)
 - `internal/audio/` — Windows capture device enumeration and peak level (WASAPI via go-wca)
 - `internal/lock/` — Windows LockWorkStation
